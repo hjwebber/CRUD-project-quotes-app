@@ -34,7 +34,7 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
         })
         app.put('/quotes', (req, res) => {
             quotesCollection.findOneAndUpdate(
-                { name: 'yoda ' },
+                { name: 'Yoda' },
                 {
                     $set: {
                         name: req.body.name,
@@ -47,8 +47,21 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
             )
                 .then(result => {
                     console.log(result)
+                    res.json('Success')
                 })
                 .catch(error => console.error(error))
+        })
+        app.delete('/quotes', (req, res) => {
+            quotesCollection.deleteOne(
+                { name: req.body.name }
+            )
+                .then(result => {
+                    if (result.deletedCount === 0) {
+                        return res.json('No quote to delete')
+                    }
+                    res.json("Deleted Darth Vader's quote")
+                })
+                .catch(error => console.log(error))
         })
         app.listen(3000, function () {
             console.log('listening on 3000')
